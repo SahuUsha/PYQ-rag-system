@@ -8,6 +8,6 @@ class Question(Base):
     question_text = Column(Text)
     subject =Column(String(255))
     year = Column(Integer)
-    type = Column(String(50))
+    exam_type = Column(String(50))
     semester = Column(String(50))
     marks = Column(Integer)
