@@ -9,43 +9,30 @@ router = APIRouter()
 @router.get("/search")
 def search(query: str, page: int = 1, limit: int = 5):
 
-    offset = (page - 1) * limit
+    # 1️⃣ Generate embedding
+    embedding = generate_embedding(query)
 
-    # 🔹 Convert query to embedding
-    query_vector = generate_embedding(query)
+    # 2️⃣ Search in vector DB
+    question_ids = search_vector(embedding, limit=limit)
 
-    # 🔹 Search from Qdrant
-    results = search_vector(
-        query_vector=query_vector,
-        limit=limit,
-        offset=offset
-    )
+    # 3️⃣ Retrieve from SQL DB
+    retrieved_questions = get_questions_by_ids(question_ids)
 
-    # 🔹 If DB has results
-    if results and len(results) > 0:
-        ids = [int(r.id) for r in results]
-        questions = get_questions_by_ids(ids)
-
+    # 4️⃣ If found → Return DB data
+    if retrieved_questions:
         return {
             "source": "database",
             "page": page,
-            "questions": [
-                {
-                    "id": q.id,
-                    "question_text": q.question_text,
-                    "marks": q.marks,
-                    "year": q.year,
-                    "exam_type": q.exam_type
-                }
-                for q in questions
-            ]
+            "retrieved_questions": retrieved_questions,
+            "generated_content": None
         }
 
-    # 🔥 If DB exhausted → Generate new questions
-    generated_output = generate_references("", query)
+    # 5️⃣ If not found → Generate
+    generated_content = generate_references("", query)
 
     return {
         "source": "generated",
         "page": page,
-        "generated_questions": generated_output
+        "retrieved_questions": [],
+        "generated_content": generated_content
     }

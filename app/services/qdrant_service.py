@@ -13,13 +13,17 @@ client = QdrantClient(
 COLLECTION_NAME = "pyq_Collection"
 
 def create_collection():
-    client.recreate_collection(
-        collection_name = COLLECTION_NAME,
-        vectors_config=VectorParams(
-            size=384,
-            distance = Distance.COSINE
-        ),
-    )
+    collections = client.get_collections().collections
+    collection_names = [c.name for c in collections]
+
+    if COLLECTION_NAME not in collection_names:
+        client.create_collection(
+            collection_name=COLLECTION_NAME,
+            vectors_config=VectorParams(
+                size=384,
+                distance=Distance.COSINE
+            ),
+        )
     
 def insert_vector(question_id, vector , payload):
     client.upsert(
@@ -42,4 +46,5 @@ def search_vector(query_vector, limit=5, offset=0):
         offset=offset
     )
 
-    return response.points  # VERY IMPORTANT
+    # return only IDs
+    return [point.id for point in response.points]

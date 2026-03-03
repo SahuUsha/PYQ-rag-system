@@ -34,6 +34,19 @@ def save_question(
 def get_questions_by_ids(ids):
     db = SessionLocal()
     try:
-        return db.query(Question).filter(Question.id.in_(ids)).all()
+        questions = db.query(Question).filter(Question.id.in_(ids)).all()
+
+        return [
+            {
+                "id": q.id,
+                "question": q.question_text,
+                "subject": q.subject,
+                "year": q.year,
+                "semester": q.semester,
+                "exam_type": q.exam_type,
+                "marks": q.marks
+            }
+            for q in questions
+        ]
     finally:
         db.close()
