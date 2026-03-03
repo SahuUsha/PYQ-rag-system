@@ -5,7 +5,7 @@ from app.services.pdf_services import extract_questions
 from app.services.db_service import save_question
 from app.services.qdrant_service import insert_vector
 from app.services.embedding import generate_embedding
-from app.services.db_service import save_question
+
 
 router = APIRouter()
 
@@ -54,3 +54,4 @@ def upload_pdf(file: UploadFile = File(...)):
         "message": "PDF processed successfully",
         "total_questions": len(questions)
     }
+ 

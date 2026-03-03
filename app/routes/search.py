@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from app.services.embedding import generate_embedding
 from app.services.qdrant_service import search_vector
 from app.services.db_service import get_questions_by_ids
-from app.services.groq_service import generate_reference
+from app.services.groq_service import generate_references
 
 router = APIRouter()
 
@@ -22,8 +22,8 @@ def search(query: str, page: int = 1, limit: int = 5):
     )
 
     # 🔹 If DB has results
-    if results:
-        ids = [r.id for r in results]
+    if results and len(results) > 0:
+        ids = [int(r.id) for r in results]
         questions = get_questions_by_ids(ids)
 
         return {
@@ -42,11 +42,10 @@ def search(query: str, page: int = 1, limit: int = 5):
         }
 
     # 🔥 If DB exhausted → Generate new questions
-    generated_output = generate_reference("", query)
+    generated_output = generate_references("", query)
 
     return {
         "source": "generated",
         "page": page,
         "generated_questions": generated_output
     }
-    

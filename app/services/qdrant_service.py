@@ -34,9 +34,12 @@ def insert_vector(question_id, vector , payload):
     )
     
 
-def search_vector(query_vector , limit=5):
-    return client.search(
+def search_vector(query_vector, limit=5, offset=0):
+    response = client.query_points(
         collection_name=COLLECTION_NAME,
-        query_vector=query_vector,
-        limit=limit
+        query=query_vector,
+        limit=limit,
+        offset=offset
     )
+
+    return response.points  # VERY IMPORTANT
