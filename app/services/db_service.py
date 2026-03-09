@@ -10,8 +10,11 @@ def save_question(
     exam_type=None,
     marks=None,
 ):
+
     db = SessionLocal()
+
     try:
+
         question = Question(
             question_text=question_text,
             subject=subject,
@@ -25,15 +28,26 @@ def save_question(
         db.commit()
         db.refresh(question)
 
+        print("Question saved:", question.id)
+
         return question
+
+    except Exception as e:
+
+        db.rollback()
+        print("DB ERROR:", str(e))
+        raise
 
     finally:
         db.close()
 
 
 def get_questions_by_ids(ids):
+
     db = SessionLocal()
+
     try:
+
         questions = db.query(Question).filter(Question.id.in_(ids)).all()
 
         return [
@@ -48,5 +62,6 @@ def get_questions_by_ids(ids):
             }
             for q in questions
         ]
+
     finally:
         db.close()
