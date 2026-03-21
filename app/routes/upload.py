@@ -39,7 +39,7 @@ def upload_pdf(file: UploadFile = File(...)):
                 print("Skipping empty question")
                 continue
 
-            marks = q.get("marks") or 0
+            marks = str(q.get("marks") or "")
 
             saved_question = save_question(
                 question_text=q,  # store full JSON

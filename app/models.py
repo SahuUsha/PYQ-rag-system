@@ -18,4 +18,4 @@ class Question(Base):
 
     semester = Column(Text)
 
-    marks = Column(Integer)
+    marks = Column(String)

@@ -39,3 +39,4 @@ def extract_questions(file_path):
     print(f"Extracted {len(questions)} questions")
 
     return questions
+    return None
