@@ -33,11 +33,15 @@ def upload_pdf(file: UploadFile = File(...)):
 
         for q in questions:
 
-            question_text = q.get("question_text")
+            main_text = q.get("question_text")
+            subquestions = q.get("subquestions", [])
 
-            if not question_text:
+            if not main_text and not subquestions:
                 print("Skipping empty question")
                 continue
+
+            # For embedding, use main_text if available, else concat subquestions
+            embedding_text = main_text or " ".join([sq.get("text", "") for sq in subquestions])
 
             marks = str(q.get("marks") or "")
 
@@ -53,7 +57,7 @@ def upload_pdf(file: UploadFile = File(...)):
             print("Saving question:", q)
 
             # embedding using only main statement
-            vector = generate_embedding(question_text)
+            vector = generate_embedding(embedding_text)
 
             if hasattr(vector, "tolist"):
                 vector = vector.tolist()
@@ -62,6 +66,7 @@ def upload_pdf(file: UploadFile = File(...)):
                 question_id=saved_question.id,
                 vector=vector,
                 payload={
+                    "question": q.get("question_text"),
                     "subject": q.get("subject"),
                     "year": q.get("year"),
                     "semester": q.get("semester"),

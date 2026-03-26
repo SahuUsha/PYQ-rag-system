@@ -298,7 +298,7 @@ def parse_pdf_with_gemini(file_path):
                 "visual_content_latex": q.get("visual_content_latex"),
             }
 
-            if cleaned_q["question_text"]:
+            if cleaned_q["question_text"] or cleaned_q["subquestions"]:
                 cleaned_data.append(cleaned_q)
 
         print(f"✅ Total Questions Extracted: {len(cleaned_data)}")

@@ -1,0 +1,18 @@
+DEBUG: DATABASE_URL is postgresql://neondb_owner:npg_bdk3xToA6GRa@ep-winter-art-ai8ddv5r.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require
+D:\NLP Project\app\services\gemini_service.py:77: FutureWarning: 
+
+All support for the `google.generativeai` package has ended. It will no longer be receiving 
+updates or bug fixes. Please switch to the `google.genai` package as soon as possible.
+See README for more details:
+
+https://github.com/google-gemini/deprecated-generative-ai-python/blob/main/README.md
+
+  import google.generativeai as genai
+INFO:     Started server process [15068]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [15068]

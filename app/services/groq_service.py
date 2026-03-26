@@ -50,7 +50,7 @@ def generate_references(context, query):
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
             messages=[{"role": "user", "content": prompt}],
-            temperature=0.4,
+            temperature=0.2,
             response_format={"type": "json_object"}
         )
 
@@ -62,4 +62,4 @@ def generate_references(context, query):
             "similar_questions": [],
             "predicted_long_question": None,
             "topic_summary": "Could not generate references at this time."
-        }
+        }
