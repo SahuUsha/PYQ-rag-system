@@ -128,8 +128,10 @@ Subject:
 Extract subject name exactly as mentioned in the paper.
 Exam Type:
 Identify exam type from codes:
-"RS" → Regular
-"MS" → MakeUp
+"RS" → Regular Summer 
+"MS" → MakeUp Summer
+"RW" → Regular Winter
+"MW" → MakeUp Winter
 "MSVRU" → treat as MakeUp
 Store normalized value: "Regular" or "MakeUp"
 Year Extraction (IMPORTANT):

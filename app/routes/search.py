@@ -102,15 +102,24 @@ def search(query: str, page: int = 1, limit: int = 25):
         semantic = semantic_boost(q_text, query)
         boost = direct_keyword_boost(q_text, query)
         final_score = 0.7 * vector_score + 0.2 * kw_score + 0.05 * semantic + 0.5 * boost
-        reranked.append((q, final_score))
+        reranked.append({
+            "question": q,
+            "final_score": final_score,
+            "vector_score": vector_score,
+            "keyword_score": kw_score,
+            "semantic_score": semantic,
+            "boost": boost
+            })
 
-    reranked.sort(key=lambda x: x[1], reverse=True)
+    reranked.sort(key=lambda x: x["final_score"], reverse=True)
 
     # 6️⃣ SEPARATE HIGHLY RELATED QUESTIONS
     related = []
     others = []
     seen_ids = set()
-    for q, score in reranked:
+    for item in reranked:
+        q = item["question"]
+        score = item["final_score"]
         q_text = extract_text(q)
         if query.lower() in q_text.lower():
             related.append(q)
@@ -118,7 +127,7 @@ def search(query: str, page: int = 1, limit: int = 25):
             others.append(q)
         seen_ids.add(q["id"])
 
-    print("Related questions:", len(related))
+
     print("Other questions:", len(others))
 
     # 7️⃣ COMBINE SEQUENTIALLY (related first)
@@ -134,6 +143,17 @@ def search(query: str, page: int = 1, limit: int = 25):
 
     # 🔟 GENERATE ANSWER
     generated_content = generate_references(context, query)
+
+    print("\nTop Results with Scores:")
+    for item in reranked[:10]:
+        print({
+            "id": item["question"]["id"],
+            "final": item["final_score"],
+            "vector": item["vector_score"],
+            "keyword": item["keyword_score"],
+            "semantic": item["semantic_score"],
+            "boost": item["boost"]
+        })
 
     return {
         "source": "database",

@@ -58,6 +58,7 @@ def upload_pdf(file: UploadFile = File(...)):
 
             # embedding using only main statement
             vector = generate_embedding(embedding_text)
+            print("Vector after embedding:", vector[:20])
 
             if hasattr(vector, "tolist"):
                 vector = vector.tolist()
